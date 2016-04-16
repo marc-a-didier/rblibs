@@ -1,9 +1,8 @@
-#!/usr/bin/env ruby
-
-require 'net/smtp'
 
 module Spammer
 
+    require 'net/smtp'
+    
     def self.send(config, message)
         msg = "From: #{config[:from]}\n"
         msg << "To: <#{config[:recipients].join('; ')}>\n"
