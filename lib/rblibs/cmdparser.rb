@@ -35,13 +35,15 @@ module CmdParser
             if opt.options
                 # Assign default value if any
                 h[opt.key] = opt.options[:default] if opt.options[:default]
+                # Call callback on default value if any
+                h[opt.key] = opt.options[:call_back].call(h[opt.key]) if h[opt.key] && opt.options[:call_back]
                 # Check if present if mandatory
                 raise "Mandatory option #{opt.name}" if opt.options[:mandatory] && !ix
             end
 
             if ix
                 if opt.name.split(' ')[1]
-                    if opt.options[:call_back]
+                    if opt.options && opt.options[:call_back]
                         h[opt.key] = opt.options[:call_back].call(ARGV[ix+1])
                     else
                         h[opt.key] = ARGV[ix+1]

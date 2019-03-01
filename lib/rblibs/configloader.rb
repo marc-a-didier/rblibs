@@ -14,7 +14,7 @@
 module ConfigLoader
 
     require 'psych'
-    
+
     def self.symbolize(obj)
         return obj.reduce({}) { |h, (k, v)| h[k.to_sym] =  self.symbolize(v); h } if obj.is_a?(Hash)
         return obj.reduce([]) { |a, v     | a           << self.symbolize(v); a } if obj.is_a?(Array)
@@ -24,7 +24,14 @@ module ConfigLoader
     def self.sub_env_vars(obj)
         obj.each { |k, v| self.sub_env_vars(v) } if obj.is_a?(Hash)
         obj.each { |e| self.sub_env_vars(e) } if obj.is_a?(Array)
-        obj.scan(/\$[A-Z]+/).each { |m| obj.sub!(m, ENV[m[1..-1]]) if ENV[m[1..-1]] } if obj.is_a?(String)
+        obj.scan(/.?\$[\{|\(]?\w+[\}|\)]?/).each do |m|
+            if m[0] == '\\'
+                obj.sub!(m, m[1..-1])
+            else
+                s = m.strip
+                obj.sub!(s, ENV[s[1..-1]]) if ENV[s[1..-1]]
+            end
+        end if obj.is_a?(String)
         return obj
     end
 

@@ -2,7 +2,7 @@
 module Spammer
 
     require 'net/smtp'
-    
+
     def self.send(config, message)
         msg = "From: #{config[:from]}\n"
         msg << "To: <#{config[:recipients].join('; ')}>\n"
@@ -14,7 +14,7 @@ module Spammer
             # smtp.set_debug_output(STDERR)
             smtp.enable_starttls
             # Since ruby 2.3 first param of start must NOT be empty!!!
-            smtp.start('rrsync', config[:recipients].first, config[:passwd], :login) do |smtp|
+            smtp.start('rblibs', config[:recipients].first, config[:passwd], :login) do |smtp|
                 smtp.send_message(msg, config[:sender], config[:recipients])
             end
         else
