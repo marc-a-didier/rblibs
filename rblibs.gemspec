@@ -1,8 +1,8 @@
 
 Gem::Specification.new do |s|
   s.name        = 'rblibs'
-  s.version     = '0.0.14'
-  s.date        = '2019-03-01'
+  s.version     = '0.0.15'
+  s.date        = '2020-01-04'
   s.summary     = 'Misc helpers'
   s.description = 'Some helpers modules'
   s.authors     = ['marc a. didier']

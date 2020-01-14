@@ -24,14 +24,10 @@ module ConfigLoader
     def self.sub_env_vars(obj)
         obj.each { |k, v| self.sub_env_vars(v) } if obj.is_a?(Hash)
         obj.each { |e| self.sub_env_vars(e) } if obj.is_a?(Array)
-        obj.scan(/.?\$[\{|\(]?\w+[\}|\)]?/).each do |m|
-            if m[0] == '\\'
-                obj.sub!(m, m[1..-1])
-            else
-                s = m.strip
-                obj.sub!(s, ENV[s[1..-1]]) if ENV[s[1..-1]]
-            end
-        end if obj.is_a?(String)
+        if obj.is_a?(String)
+            obj.gsub!(/(?<!\\)\$\w+/) { |m| ENV[m[1..-1]] || m  } #raise "Env var #{m} not found!")
+            obj.gsub!(/\\\$/, '$')
+        end
         return obj
     end
 
